@@ -17,29 +17,25 @@ const calendarData = [
   { hour: 13, item: 'as' },
   { hour: 14, item: 'asd' },
   { hour: 15, item: 'asd' },
-  { hour: 22, item: 'asd' },
+  { hour: 20, item: 'asd' },
   { hour: 23, item: 'asd' },
 ]
 
 
 calendarData.map(function (data) {
-  $('#stuff').append(
-     
-  if (data.hour === hourClass) {
+  if (data.hour === hourClass) {$('#stuff').append(
     `<div id="hour" class="row time-block present"><div class="col-2 col-md-1 hour text-center py-3">${dayjs().hour(data.hour).format('h A')}</div><textarea class="col-8 col-md-10 description" rows="3">${data.item}</textarea>
     <button class="btn saveBtn col-2 col-md-1" aria-label="save"><i class="fas fa-save" aria-hidden="true"></i></button> </div>`
-  }
-  else if (data.hour < hourClass) {
+  )};
+  if (data.hour < hourClass) {$('#stuff').append(
     `<div id="hour" class="row time-block past"><div class="col-2 col-md-1 hour text-center py-3">${dayjs().hour(data.hour).format('h A')}</div><textarea class="col-8 col-md-10 description" rows="3">${data.item}</textarea>
     <button class="btn saveBtn col-2 col-md-1" aria-label="save"><i class="fas fa-save" aria-hidden="true"></i></button> </div>`
-  }
-  else if (data.hour > hourClass) {
-    `<div id="hour" class="row time-block future"><div class="col-2 col-md-1 hour text-center py-3">${dayjs().hour(data.hour).format('h A')}</div><textarea class="col-8 col-md-10 description" rows="3">${data.item}</textarea>
+  )};
+  if (data.hour > hourClass) {$('#stuff').append(
+  `<div id="hour" class="row time-block future"><div class="col-2 col-md-1 hour text-center py-3">${dayjs().hour(data.hour).format('h A')}</div><textarea class="col-8 col-md-10 description" rows="3">${data.item}</textarea>
     <button class="btn saveBtn col-2 col-md-1" aria-label="save"><i class="fas fa-save" aria-hidden="true"></i></button> </div>`
-  };
-
-)
-});
+  )};
+  });
 
 
 const button = document.querySelectorAll('button');
@@ -49,28 +45,28 @@ for (i of button) {
   })
 }
 
+function getStoredData(){
+  const storedData = localStorage.get('');
+  calander = JSON.parse(storedData);
+}
 
-// calendarData.map(function (data) {
-//   $('#stuff').append(
-//     `<div id="hour" class="row time-block past"><div class="col-2 col-md-1 hour text-center py-3">${dayjs().hour(data.hour).format('h A')}</div><textarea class="col-8 col-md-10 description" rows="3">${data.item}</textarea>
-//     <button class="btn saveBtn col-2 col-md-1" aria-label="save"><i class="fas fa-save" aria-hidden="true"></i></button> </div>`
-//   )
+function saveCalendar(){
+  localStorage.setItem('', JSON.stringify(calander));
+}
 
-// });
+function addToCalender(newObj){
+  calander.push(newObj);
+}
 
+function updateCalender(updatedObj){
+  calender = calender.map(function(dayObj){
+  if (dayObj.hour !== updatedObj.hour){
+    return dayObj;
+  }
+  return updatedObj;
+})
+}
 
-// for (i = 0; i < calendarData.length; i++) {
-// if (calendarData[i].hour === hourClass) {
-//   document.querySelectorAll('#hour').classList.add('present');
-//   document.querySelectorAll('#hour').classList.remove('past', 'future');
-// } else if (calendarData[i].hour < hourClass) {
-//   document.querySelectorAll('#hour').classList.add('past');
-//   document.querySelectorAll('#hour').classList.remove('present', 'future');
-// } else if (calendarData[i].hour > hourClass) {
-//   document.querySelectorAll('#hour').classList.add('future');
-//   document.querySelectorAll('#hour').classList.remove('past', 'present');
-// };
-// };
 
 console.log(calendarData[8].hour)
 console.log(hourClass)
