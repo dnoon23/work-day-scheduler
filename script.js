@@ -1,21 +1,13 @@
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
+//Creates variables for the date and hour and sets up how the date is displayed on the page
 var today = dayjs();
-const stuff = document.querySelector('#stuff');
 let hourClass = dayjs().hour();
-
-
 $('#currentDay').text(today.format('dddd, MMMM D'));
-localStorage.setItem('todo', 'eat');
 
-var storedData = localStorage.getItem('stuff');
+//Sets up a variable for the local storage and puts the data into another variable
+var storedData = localStorage.getItem('calendarInfo');
 var calendar = JSON.parse(storedData);
 
-
-
-
-
+//Sets up an array for the hours with an area for the text info to be saved
 const calendarData = [
   { hour: 9, item: '' },
   { hour: 10, item: '' },
@@ -24,10 +16,11 @@ const calendarData = [
   { hour: 13, item: '' },
   { hour: 14, item: '' },
   { hour: 15, item: '' },
-  { hour: 20, item: '' },
-  { hour: 23, item: '' },
+  { hour: 16, item: '' },
+  { hour: 17, item: '' },
 ]
 
+//A copy of the above array created to be used to save changes made in the text areas and save them to local storage
 let calendarDataCopy = [
   { hour: 9, item: '' },
   { hour: 10, item: '' },
@@ -36,49 +29,52 @@ let calendarDataCopy = [
   { hour: 13, item: '' },
   { hour: 14, item: '' },
   { hour: 15, item: '' },
-  { hour: 22, item: '' },
-  { hour: 23, item: '' },
+  { hour: 16, item: '' },
+  { hour: 17, item: '' },
 ]
 
+//Checks if anything is saved to local storage and if there is it makes the page and populates the text fields with what was saved
 if (calendar != null) {
+  //Makes the copy and local storage the same so changes made don't overwrite data in local storage
   calendarDataCopy = calendar;
   calendar.map(function (data) {
     if (data.hour === hourClass) {
-      $('#stuff').append(
+      $('#planner').append(
         `<div id="hour" class="row time-block present"><div class="col-2 col-md-1 hour text-center py-3">${dayjs().hour(data.hour).format('h A')}</div><textarea class="col-8 col-md-10 description hour-${data.hour}" rows="3">${data.item}</textarea>
       <button class="btn saveBtn col-2 col-md-1 hour-${data.hour}" aria-label="save"><i class="fas fa-save" aria-hidden="true"></i></button> </div>`
       )
     };
     if (data.hour < hourClass) {
-      $('#stuff').append(
+      $('#planner').append(
         `<div id="hour" class="row time-block past"><div class="col-2 col-md-1 hour text-center py-3">${dayjs().hour(data.hour).format('h A')}</div><textarea class="col-8 col-md-10 description hour-${data.hour}" rows="3">${data.item}</textarea>
       <button class="btn saveBtn col-2 col-md-1 hour-${data.hour}" aria-label="save"><i class="fas fa-save" aria-hidden="true"></i></button> </div>`
       )
     };
     if (data.hour > hourClass) {
-      $('#stuff').append(
+      $('#planner').append(
         `<div id="hour" class="row time-block future"><div class="col-2 col-md-1 hour text-center py-3">${dayjs().hour(data.hour).format('h A')}</div><textarea class="col-8 col-md-10 description hour-${data.hour}" rows="3">${data.item}</textarea>
       <button class="btn saveBtn col-2 col-md-1 hour-${data.hour}" aria-label="save"><i class="fas fa-save" aria-hidden="true"></i></button> </div>`
       )
     };
   });
 }
+//If there is nothing in local storage the page is populated with empty text areas
 else {
   calendarData.map(function (data) {
     if (data.hour === hourClass) {
-      $('#stuff').append(
+      $('#planner').append(
         `<div id="hour" class="row time-block present"><div class="col-2 col-md-1 hour text-center py-3">${dayjs().hour(data.hour).format('h A')}</div><textarea class="col-8 col-md-10 description hour-${data.hour}" rows="3">${data.item}</textarea>
     <button class="btn saveBtn col-2 col-md-1 hour-${data.hour}" aria-label="save"><i class="fas fa-save" aria-hidden="true"></i></button> </div>`
       )
     };
     if (data.hour < hourClass) {
-      $('#stuff').append(
+      $('#planner').append(
         `<div id="hour" class="row time-block past"><div class="col-2 col-md-1 hour text-center py-3">${dayjs().hour(data.hour).format('h A')}</div><textarea class="col-8 col-md-10 description hour-${data.hour}" rows="3">${data.item}</textarea>
     <button class="btn saveBtn col-2 col-md-1 hour-${data.hour}" aria-label="save"><i class="fas fa-save" aria-hidden="true"></i></button> </div>`
       )
     };
     if (data.hour > hourClass) {
-      $('#stuff').append(
+      $('#planner').append(
         `<div id="hour" class="row time-block future"><div class="col-2 col-md-1 hour text-center py-3">${dayjs().hour(data.hour).format('h A')}</div><textarea class="col-8 col-md-10 description hour-${data.hour}" rows="3">${data.item}</textarea>
     <button class="btn saveBtn col-2 col-md-1 hour-${data.hour}" aria-label="save"><i class="fas fa-save" aria-hidden="true"></i></button> </div>`
       )
@@ -86,85 +82,38 @@ else {
   });
 }
 
-
-// function updateCalender(updatedObj){
-//   calendar = calendarData.map(function(item){
-//   if (item.hour !== updatedObj.hour){
-//     return dayObj;
-//   }
-//   return updatedObj;
-// })
-// }
-
-// updateCalenar();
-
+//Listener for a button click and determins which row had the button pushed and gets what was in the text area
 const button = document.querySelectorAll('button');
 for (i of button) {
   i.addEventListener('click', function (e) {
     let text = '';
     const blip = e.currentTarget.getAttribute('class').split(/\s+/);
-    blip.forEach(function (itemTemp, index) {
+    blip.forEach(function (itemTemp) {
       if (itemTemp.indexOf('hour-') === 0) {
         let hourTemp = itemTemp.split('-');
-        document.querySelectorAll('textarea').forEach(function (element, index) {
+        document.querySelectorAll('textarea').forEach(function (element) {
           const zip = element.getAttribute('class').split(/\s+/);
-          zip.forEach(function (item, index) {
+          zip.forEach(function (item) {
             if (item.includes('hour-')) {
               if (item.split('-')[1] === hourTemp[1]) {
                 text = element.value;
-              }
-            }
-          })
+              };
+            };
+          });
         });
-        calendarDataCopy.forEach(function (item, index) {
+        //Takes what was put in the text field when the save button was pushed and puts it into the copy array and saves it to local storage
+        calendarDataCopy.forEach(function (item) {
           Object.keys(item).forEach(function (key) {
             if (item[key] === Number(hourTemp[1])) {
               item.item = text;
               calendarDataCopy.push(item.item);
-              localStorage.setItem('stuff', JSON.stringify(calendarDataCopy));
-            }
-          })
-        })
-      }
-    })
-  })
-}
+              localStorage.setItem('calendarInfo', JSON.stringify(calendarDataCopy));
+            };
+          });
+        });
+      };
+    });
+  });
+};
 
-
-
-// function saveCalendar(){
-//   localStorage.setItem('', JSON.stringify(calenderData));
-// }
-
-// function addToCalender(newObj){
-//   calander.push(newObj);
-// }
-
-// function updateCalender(updatedObj){
-//   calender = calender.map(function(dayObj){
-//   if (dayObj.hour !== updatedObj.hour){
-//     return dayObj;
-//   }
-//   return updatedObj;
-// })
-// }
-
-
-console.log(calendarData[8].hour)
-console.log(hourClass)
-console.log(typeof calendarData[8].hour)
-console.log(typeof hourClass)
-// console.log(JSON.stringify(calendarData));
-
-
-// TODO: Add a listener for click events on the save button. This code should
-// use the id in the containing time-block as a key to save the user input in
-// local storage. HINT: What does `this` reference in the click listener
-// function? How can DOM traversal be used to get the "hour-x" id of the
-// time-block containing the button that was clicked? How might the id be
-// useful when saving the description in local storage?
-//
-// TODO: Add code to get any user input that was saved in localStorage and set
-// the values of the corresponding textarea elements. HINT: How can the id
-// attribute of each time-block be used to do this?
 
