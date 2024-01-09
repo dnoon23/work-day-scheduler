@@ -41,6 +41,7 @@ let calendarDataCopy = [
 ]
 
 if (calendar != null) {
+  calendarDataCopy = calendar;
   calendar.map(function (data) {
     if (data.hour === hourClass) {
       $('#stuff').append(
@@ -119,7 +120,8 @@ for (i of button) {
           Object.keys(item).forEach(function (key) {
             if (item[key] === Number(hourTemp[1])) {
               item.item = text;
-              localStorage.setItem('stuff', JSON.stringify(calendarDataCopy))
+              calendarDataCopy.push(item.item);
+              localStorage.setItem('stuff', JSON.stringify(calendarDataCopy));
             }
           })
         })
